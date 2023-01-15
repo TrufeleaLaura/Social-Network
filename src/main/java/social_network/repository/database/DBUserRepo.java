@@ -70,6 +70,26 @@ public class DBUserRepo implements Repository<Long, User> {
         }
         return null;
     }
+    public User findOne_nume(String nume) {
+        String sql = "SELECT * FROM users WHERE nume=?";
+
+        try {
+            PreparedStatement statement = getStatement(sql);
+            statement.setString(1, nume);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return new User(resultSet.getLong(ID.getSqlValue()),
+                        resultSet.getString(NUME.getSqlValue()),
+                        resultSet.getString(EMAIL.getSqlValue()));
+            } else  {
+                return null;
+            }
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+        return null;
+    }
 
 
     @Override

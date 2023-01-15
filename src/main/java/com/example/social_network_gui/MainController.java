@@ -19,16 +19,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainController implements Observer {
+    public TextField searchUserTextField;
     private ObservableList<User> usersList = FXCollections.observableArrayList();
     private ObservableList<UserDTOFriend> friendList = FXCollections.observableArrayList();
 
     private ObservableList<User> friendRequestsList = FXCollections.observableArrayList();
+
+    public ObservableList<User> sentRequestsList = FXCollections.observableArrayList();
+
+
     @FXML
     public Label connectedUserLabel;
     @FXML
-    public Label emailUserLabel;
+    private Button refreshButton;
     @FXML
-    public TextField searchUserTextField;
+    public Label emailUserLabel;
+
+
     private AppService service;
     private User loggedUser = null;
     @FXML
@@ -47,6 +54,29 @@ public class MainController implements Observer {
     public ListView<User> friendRequestsListView;
     @FXML
     public TableView<User> usersTable;
+
+    @FXML
+    public Button acceptButton;
+
+    @FXML
+    public Button addFriendshipButton;
+    @FXML
+    public Button rejectButton;
+    @FXML
+    public Button ChatButton;
+
+    @FXML
+    public Button deleteSentRequestButton;
+    @FXML
+    public TableView<User> sentRequestsTableView;
+    @FXML
+    public TableColumn<User, String> sentRequestsNameColumn;
+    @FXML
+    public TableColumn<User, String> sentRequestsEmailColumn;
+
+
+
+
     public void setService(AppService service, String email) {
 
         //  friendRequestsPane.setVisible(visibleFriendrequestsPane);
@@ -61,11 +91,30 @@ public class MainController implements Observer {
 
     @Override
     public void update() {
-         initLists();
+        initLists();
     }
-    public void logOut() throws IOException{
+
+    public void logOut() throws IOException {
         Main main = new Main();
         main.switchToLogIn("login.fxml");
+    }
+
+    public void openChat() throws IOException {
+        Main main = new Main();
+        main.switchToChat("message.fxml",loggedUser);
+    }
+
+    @FXML
+    public void onSearchUserTextField() {
+        List<User> users = service.getAllUsers();
+        List<User> usersTemp = new ArrayList<>();
+        for (User user : users) {
+            String name = user.getName();
+            if (name.startsWith(searchUserTextField.getText()) && user.getId() != loggedUser.getId() && service.getRelationByUsers(loggedUser.getId(), user.getId()) == null)
+                usersTemp.add(user);
+        }
+        usersList.setAll(usersTemp);
+        usersTable.setItems(usersList);
     }
 
 
@@ -78,18 +127,23 @@ public class MainController implements Observer {
         NameColumn.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<User, String>("email"));
 
+        sentRequestsNameColumn.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
+        sentRequestsEmailColumn.setCellValueFactory(new PropertyValueFactory<User, String>("email"));
+
         usersTable.setItems(usersList);
         friendRequestsListView.setItems(friendRequestsList);
         friendsTableView.setItems(friendList);
+        sentRequestsTableView.setItems(sentRequestsList);
 
 
-        //searchUserTextField.textProperty().addListener(o -> onSearchUserTextField());
     }
+
+
     private void initLists() {
         HashMap<User, String> friendsOfUser = service.getFriends(loggedUser.getId());
         List<UserDTOFriend> friendsTemp = new ArrayList<>();
         for (User user : friendsOfUser.keySet()) {
-            friendsTemp.add(new UserDTOFriend(user,friendsOfUser.get(user) ));
+            friendsTemp.add(new UserDTOFriend(user, friendsOfUser.get(user)));
         }
         friendList.setAll(friendsTemp);
 
@@ -103,64 +157,24 @@ public class MainController implements Observer {
         friendRequestsList.setAll(friendReqTemp);
 
 
-
         List<User> allUsers = service.getAllUsers();
         List<User> allUsersTempList = allUsers.stream()
                 .filter(user -> user.getId() != loggedUser.getId())
+                .filter(user-> service.getRelationByUsers(loggedUser.getId(),user.getId())==null)
                 .collect(Collectors.toList());
 
         usersList.setAll(allUsersTempList);
 
-    }
-    /* @FXML
-    public void onSearchUserTextField() {
-        List<User> users = service.getAllUsers();
-        List<User> usersTemp = new ArrayList<>();
-        for (User user : users) {
-            String name = user.getName();
-            if (name.startsWith(searchUserTextField.getText()) && user.getId() != loggedUser.getId())
-                usersTemp.add(user);
+        List<User> sentRequests = new ArrayList<>();
+        List<User> friendRequests = service.getSentRequests(loggedUser.getId());
+        for (User user : friendReqOfUsers) {
+            sentRequests.add(user);
         }
-        usersList.setAll(usersTemp);
-        usersTable.setItems(usersList);
-    }*/
-  /*
-    private String email;
-    @FXML
-    public AnchorPane friendRequestsPane;
-    @FXML
-    public Button acceptFriendButton;
-    @FXML
-    public Button rejectFriendButton;
 
-    @FXML
-    public Button removeFriendButton;
-
-    @FXML
-    public Button addFriendshipButton;
+        sentRequestsList.setAll(friendRequests);
 
 
-
-
-
-
-
-
-    @FXML
-    public Button acceptButton;
-    @FXML
-    public Button showFriendRequestsButton;
-
-
-
-
-
-
-
-
-
-
-
+    }
 
     @FXML
     public void onAcceptButton() {
@@ -168,6 +182,7 @@ public class MainController implements Observer {
         try {
             long id = friendRequestsListView.getSelectionModel().getSelectedItem().getId();
             service.addFriendship(loggedUser.getId(), id);
+
         } catch (NullPointerException npe) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "No user selected!", ButtonType.OK);
             alert.show();
@@ -177,14 +192,11 @@ public class MainController implements Observer {
         }
     }
 
-
-
-
     @FXML
     public void onAddFriendButton() {
         try {
             User userToAskFriendship = usersTable.getSelectionModel().getSelectedItem();
-            service.addFriendship(loggedUser.getId(), userToAskFriendship.getId());
+            service.addFriendship( loggedUser.getId(),userToAskFriendship.getId());
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Sent friendrequest", ButtonType.OK);
             alert.show();
 
@@ -195,15 +207,53 @@ public class MainController implements Observer {
             Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
             alert.show();
         }
+    }
+    @FXML
+    public void onRejectFriendrequestButton() {
+        try {
+            Long userID = friendRequestsListView.getSelectionModel().getSelectedItem().getId();
+            service.removeFriendship(userID, loggedUser.getId());
+        } catch (NullPointerException npe) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "No user selected!", ButtonType.OK);
+            alert.show();
+        } catch (Exception ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.show();
+        }
+    }
+    public void onRemoveFriendButton() {
 
+        try {
+            long friendID = friendsTableView.getSelectionModel().getSelectedItem().getUID();
+            service.removeFriendship(friendID, loggedUser.getId());
+        } catch (NullPointerException npe) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "No friend selected!", ButtonType.OK);
+            alert.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.show();
+        }
+    }
+    public void onRemoveSendRequestButton() {
+
+        try {
+            long friendID = sentRequestsTableView.getSelectionModel().getSelectedItem().getId();
+            service.removeFriendship(friendID, loggedUser.getId());
+        } catch (NullPointerException npe) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "No friend selected!", ButtonType.OK);
+            alert.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.show();
+        }
     }
 
-
-
-
-
-
-    }*/
-
 }
+
+
+
+
+
 

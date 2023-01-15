@@ -5,5 +5,6 @@ module com.example.social_network_gui {
 
 
     opens com.example.social_network_gui to javafx.fxml;
+    opens social_network.domain to javafx.base;
     exports com.example.social_network_gui;
 }

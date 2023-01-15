@@ -10,71 +10,84 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="422.0" prefWidth="758.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.social_network_gui.MainController">
+<AnchorPane prefHeight="432.0" prefWidth="806.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.social_network_gui.MainController">
    <children>
-      <SplitPane dividerPositions="0.29946524064171115" prefHeight="400.0" prefWidth="600.0">
+      <SplitPane dividerPositions="0.2938756855575868" prefHeight="400.0" prefWidth="600.0">
          <items>
-            <AnchorPane prefHeight="398.0" prefWidth="197.0">
+            <AnchorPane prefHeight="414.0" prefWidth="214.0">
                <children>
-                  <SplitPane dividerPositions="0.2046370967741936" orientation="VERTICAL" prefHeight="398.0" prefWidth="176.0">
+                  <SplitPane dividerPositions="0.2046370967741936" orientation="VERTICAL" prefHeight="430.0" prefWidth="253.0">
                     <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="78.0" prefWidth="188.0">
                            <children>
-                              <Label fx:id="connectedUserLabel" alignment="CENTER" layoutX="25.0" layoutY="8.0" prefHeight="30.0" prefWidth="124.0" text="Label" textAlignment="RIGHT">
+                              <Label fx:id="connectedUserLabel" alignment="CENTER" layoutX="73.0" layoutY="14.0" prefHeight="30.0" prefWidth="124.0" text="Label" textAlignment="RIGHT">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="emailUserLabel" alignment="CENTER" layoutX="13.0" layoutY="39.0" prefHeight="18.0" prefWidth="147.0" text="Label" textAlignment="RIGHT">
+                              <Label fx:id="emailUserLabel" alignment="CENTER" layoutX="61.0" layoutY="44.0" prefHeight="18.0" prefWidth="147.0" text="Label" textAlignment="RIGHT">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
                               </Label>
                            </children>
                         </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="111.0" prefWidth="163.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="336.0" prefWidth="247.0">
                            <children>
-                              <TableView fx:id="friendsTableView" prefHeight="252.0" prefWidth="174.0">
+                              <TableView fx:id="friendsTableView" prefHeight="252.0" prefWidth="253.0">
                                 <columns>
-                                  <TableColumn fx:id="friendNameColumn" prefWidth="87.19997555017471" text="Name" />
-                                  <TableColumn fx:id="friendsSinceColumn" prefWidth="87.20001220703125" text="Friends From" />
+                                  <TableColumn fx:id="friendNameColumn" prefWidth="95.20000749826431" text="Name" />
+                                  <TableColumn fx:id="friendsSinceColumn" prefWidth="156.79998016357422" text="Friends From" />
                                 </columns>
                               </TableView>
-                              <Button fx:id="removeFriendButton" layoutX="100.0" layoutY="266.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="69.0" text="Remove" />
-                              <Button fx:id="logoutButton" layoutX="14.0" layoutY="266.0" mnemonicParsing="false" onAction="#logOut" prefHeight="30.0" prefWidth="70.0" text="Log Out" />
+                              <Button fx:id="removeFriendButton" layoutX="182.0" layoutY="265.0" mnemonicParsing="false" onAction="#onRemoveFriendButton" prefHeight="30.0" prefWidth="69.0" text="Remove" />
+                              <Button fx:id="logoutButton" layoutX="4.0" layoutY="308.0" mnemonicParsing="false" onAction="#logOut" prefHeight="30.0" prefWidth="70.0" text="Log Out" />
+                              <Button fx:id="ChatButton" layoutX="4.0" layoutY="265.0" mnemonicParsing="false" onAction="#openChat" prefHeight="30.0" prefWidth="147.0" text="OpenChatWithFriends" />
                            </children>
                         </AnchorPane>
                     </items>
                   </SplitPane>
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="411.0" prefWidth="481.0">
+            <AnchorPane prefHeight="432.0" prefWidth="590.0">
                <children>
-                  <SplitPane dividerPositions="0.4931153184165233" prefHeight="413.0" prefWidth="567.0">
+                  <SplitPane dividerPositions="0.5" prefHeight="432.0" prefWidth="615.0">
                     <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="430.0" prefWidth="280.0">
                            <children>
-                              <TableView fx:id="usersTable" layoutX="4.0" prefHeight="252.0" prefWidth="270.0">
+                              <TableView fx:id="usersTable" layoutY="26.0" prefHeight="166.0" prefWidth="304.0">
                                 <columns>
-                                  <TableColumn fx:id="NameColumn" prefWidth="104.80000305175781" text="Name" />
-                                  <TableColumn fx:id="emailColumn" prefWidth="163.20001220703125" text="Email" />
+                                  <TableColumn fx:id="NameColumn" prefWidth="123.19994968175888" text="Name" />
+                                  <TableColumn fx:id="emailColumn" prefWidth="181.6000747680664" text="Email" />
                                 </columns>
                               </TableView>
-                              <TextField fx:id="seachUserTextField" layoutX="8.0" layoutY="259.0" prefHeight="39.0" prefWidth="259.0" promptText="Search a user by name... " />
-                              <Button fx:id="addFriendshipButton" layoutX="14.0" layoutY="328.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="98.0" text="Add Friend" />
-                              <Button fx:id="refreshButton" layoutX="163.0" layoutY="371.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="98.0" text="Refresh" />
+                              <TextField fx:id="searchUserTextField" layoutY="195.0" onAction="#onSearchUserTextField" prefHeight="39.0" prefWidth="304.0" promptText="Search a user by name... " />
+                              <Button fx:id="addFriendshipButton" layoutX="14.0" layoutY="239.0" mnemonicParsing="false" onAction="#onAddFriendButton" prefHeight="26.0" prefWidth="106.0" text="Add Friend" />
+                              <Button fx:id="refreshButton" layoutX="183.0" layoutY="239.0" mnemonicParsing="false" onAction="#update" prefHeight="26.0" prefWidth="106.0" text="Refresh" />
+                              <Label alignment="CENTER" layoutX="50.0" layoutY="-2.0" prefHeight="30.0" prefWidth="203.0" text="Other users from network">
+                                 <font>
+                                    <Font name="System Bold Italic" size="13.0" />
+                                 </font>
+                              </Label>
+                              <TableView fx:id="sentRequestsTableView" layoutX="-2.0" layoutY="276.0" prefHeight="114.0" prefWidth="304.0">
+                                <columns>
+                                  <TableColumn fx:id="sentRequestsNameColumn" prefWidth="136.00005185604095" text="Name" />
+                                  <TableColumn fx:id="sentRequestsEmailColumn" prefWidth="162.3999481201172" text="Email" />
+                                </columns>
+                              </TableView>
+                              <Button fx:id="deleteSentRequestButton" layoutX="73.0" layoutY="396.0" mnemonicParsing="false" onAction="#onRemoveSendRequestButton" prefHeight="26.0" prefWidth="147.0" text="Delete Friend Request" />
                            </children>
                         </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="410.0" prefWidth="254.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="412.0" prefWidth="314.0">
                            <children>
-                              <Label alignment="CENTER" layoutX="48.0" layoutY="1.0" prefHeight="26.0" prefWidth="187.0" text="FRIENDS REQUEST">
+                              <Label alignment="CENTER" layoutX="60.0" layoutY="1.0" prefHeight="26.0" prefWidth="187.0" text="FRIENDS REQUEST">
                                  <font>
                                     <Font name="System Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <ListView fx:id="friendRequestsListView" layoutY="27.0" prefHeight="274.0" prefWidth="284.0" />
-                              <Button fx:id="acceptButton" layoutX="14.0" layoutY="329.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="98.0" text="Accept" />
-                              <Button fx:id="rejectFriendButton" layoutX="171.0" layoutY="371.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="98.0" text="Reject" />
+                              <ListView fx:id="friendRequestsListView" layoutY="27.0" prefHeight="298.0" prefWidth="310.0" />
+                              <Button fx:id="acceptButton" layoutX="55.0" layoutY="350.0" mnemonicParsing="false" onAction="#onAcceptButton" prefHeight="26.0" prefWidth="98.0" text="Accept" />
+                              <Button fx:id="rejectButton" layoutX="166.0" layoutY="376.0" mnemonicParsing="false" onAction="#onRejectFriendrequestButton" prefHeight="26.0" prefWidth="98.0" text="Reject" />
                            </children>
                         </AnchorPane>
                     </items>

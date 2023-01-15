@@ -11,7 +11,7 @@ public class Friendship extends Entity<Long>{
     private Long idUser1;
     private Long idUser2;
 
-    LocalDateTime friendsFrom=null;
+    LocalDateTime friendsFrom = LocalDateTime.now();
 
 
     private String status;
@@ -25,6 +25,10 @@ public class Friendship extends Entity<Long>{
         if (friendsFrom==null)
             return "";
         return friendsFrom.format( DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
+    }
+
+    public LocalDateTime getFriendsFromAsDate(){
+        return friendsFrom;
     }
     public String getStatus() {
         return status;
@@ -40,11 +44,19 @@ public class Friendship extends Entity<Long>{
         this.idUser2= user_2;
         this.status=status;
     }
+
+    public Friendship(Long id, Long user_1, Long user_2, LocalDateTime localDateTime, String status) {
+        this.setId(id);
+        this.idUser1 = user_1;
+        this.idUser2= user_2;
+        this.friendsFrom = localDateTime;
+        this.status=status;
+    }
     public void acceptFriend() {
-        this.status = "ACCEPTED";
+        //this.setStatus("ACCEPTED");
+        this.status="ACCEPTED";
         friendsFrom=LocalDateTime.now();
     }
-
 
 
     /**

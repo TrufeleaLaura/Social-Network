@@ -4,16 +4,14 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import social_network.Validators.FriendshipValidator;
 import social_network.Validators.UserValidator;
+import social_network.domain.User;
 import social_network.repository.database.*;
 import social_network.service.*;
 
 import java.io.IOException;
-import java.time.LocalDate;
-
 
 
 public class Main extends Application {
@@ -23,6 +21,8 @@ public class Main extends Application {
     String password = "postgres";
 
     DBUserRepo repoUser = new DBUserRepo(url , username , password);
+
+    DBMessageRepo repoMessage=new DBMessageRepo(url , username , password);
     FriendshipValidator frval=new FriendshipValidator();
     UserValidator userval=new UserValidator();
     DBFriendshipRepo repoFriendship = new DBFriendshipRepo(url, username, password);
@@ -30,7 +30,7 @@ public class Main extends Application {
     FriendshipService friendshipService = new FriendshipService(repoFriendship, repoUser);
     UserService userService = new UserService(repoUser, repoFriendship);
 
-    AppService mainservice = new AppService(repoUser,repoFriendship,userval,frval);
+    AppService mainservice = new AppService(repoUser,repoFriendship,userval,frval, repoMessage);
 
 
     private static Stage currentStage;
@@ -66,6 +66,16 @@ public class Main extends Application {
         controller.setSignUpService(userService);
         currentStage.setScene(new Scene(root, 474, 500));
         currentStage.setTitle("Sign up");
+        currentStage.show();
+    }
+
+    public void switchToChat(String fxml, User user) throws IOException{
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxml));
+        AnchorPane root=loader.load();
+        MessageController controller=loader.getController();
+        controller.setService(mainservice,user);
+        currentStage.setScene(new Scene(root, 474, 500));
+        currentStage.setTitle("Chat");
         currentStage.show();
     }
 
